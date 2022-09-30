@@ -12,7 +12,7 @@ let authRoutes = require("./routes/authRoutes")
 
 app.use(authRoutes);
 
-let port = process.env.PORT || 3306
+let port = process.env.PORT || 8080
 
 app.listen(port,function(){
     console.log("Application started on port ", port);

@@ -1,4 +1,5 @@
 let database = require("../utils/database");
+let jsonwebtoken = require("jsonwebtoken")
 
 // this will help us with storing the password hash and checking it
 
@@ -24,21 +25,66 @@ let register = async function(request, response){
         return;
     }
 
-    let sql = "INSERT INTO USERS (username, password_hash, full_name) VALUES (?, ?, ?)";
+    let sql = 'INSERT INTO users (username, password_hash, full_name) VALUES (?, ?, ?)';
     let params = [username, passwordHash, fullName];
 
-    try {
-        let results = await database.queryPromise(sql, params)
-        response.sendStatus(200); // everything ws correct
-    } catch(err){
-        console.log(err);
-        response.sendStatus(500); // something went wrong when attempting to add the user to the database
-    }
+    database.query(sql, params, function(err){
+        if(err){
+            console.log('Failed to register', err)
+            response.sendStatus(400);
+        } else {
+            response.sendStatus(200);
+
+        }
+    })
+
 
 }
 
 let login = function(request, response){
+    let username = request.body.username
+    let password = request.body.password
 
+    let sql = "select full_name, password_hash from users where username = ?"
+    let params = [username];
+
+    // plain old callbacks
+    database.query(sql, params, async function(err, rows){
+        if(err){
+            console.log('Could not get password hash', err);
+            response.sendStatus(500); // my fault
+        } else {
+            if(rows.length > 1) {
+                console.log("Returned too many rows for username ", username);
+                response.sendStatus(500); // my fault
+            } else if (rows.length === 0){
+                console.log("Username is not Registered in System", err)
+                response.sendStatus(400);
+            } else {
+                let pwHash = rows[0].password_hash;
+                let fnName = rows[0].full_name;
+
+                let pass = false;
+                try {
+                    pass = await argon2.verify(pwHash, password);
+                } catch (err){
+                    console.log("Failed to verify password", err);
+                }
+                if(pass){
+                    let token = {
+                        "fullName": fnName
+                    };
+
+                    // sign this token, and send the signed token back
+                   let signedToken =  jsonwebtoken.sign(token, process.env.JSONWEBTOKEN_SECRET);
+                      response.json(signedToken);
+                } else {
+                    response.sendStatus(400);
+                }
+
+            }
+        }
+    })
 }
 
 module.exports = {register, login};
