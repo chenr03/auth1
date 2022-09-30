@@ -29,7 +29,7 @@ let register = async function(request, response){
 
     try {
         let results = await database.queryPromise(sql, params)
-        response.sendStatus(200);
+        response.sendStatus(200); // everything ws correct
     } catch(err){
         console.log(err);
         response.sendStatus(500); // something went wrong when attempting to add the user to the database
