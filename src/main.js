@@ -8,11 +8,11 @@ app.use(express.json());
 let messageRoutes = require("./routes/messageRoutes");
 let authRoutes = require("./routes/authRoutes")
 
-app.use(messageRoutes);
+// app.use(messageRoutes);
 
 app.use(authRoutes);
 
-let port = process.env.PORT || 8083
+let port = process.env.PORT || 3306
 
 app.listen(port,function(){
     console.log("Application started on port ", port);

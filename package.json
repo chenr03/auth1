@@ -1,5 +1,5 @@
 {
-  "name": "Auth1",
+  "name": "auth1",
   "scripts": {
     "start": "node./src/main.js"
   },

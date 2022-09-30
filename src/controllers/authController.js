@@ -24,11 +24,11 @@ let register = async function(request, response){
         return;
     }
 
-    let sql = "INSERT INTO USERS (username, password_hash, full_name) VALUES (?, ?, ?)"
+    let sql = "INSERT INTO USERS (username, password_hash, full_name) VALUES (?, ?, ?)";
     let params = [username, passwordHash, fullName];
 
     try {
-        let results = await database.queryPromise(sql, params);
+        let results = await database.queryPromise(sql, params)
         response.sendStatus(200);
     } catch(err){
         console.log(err);
