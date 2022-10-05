@@ -45,7 +45,7 @@ let login = function(request, response){
     let username = request.body.username
     let password = request.body.password
 
-    let sql = "select full_name, password_hash from users where username = ?"
+    let sql = "select id, full_name, password_hash from users where username = ?"
     let params = [username];
 
     // plain old callbacks
@@ -63,6 +63,7 @@ let login = function(request, response){
             } else {
                 let pwHash = rows[0].password_hash;
                 let fnName = rows[0].full_name;
+                let userId = rows[0].id
 
                 let pass = false;
                 try {
@@ -72,7 +73,8 @@ let login = function(request, response){
                 }
                 if(pass){
                     let token = {
-                        "fullName": fnName
+                        "fullName": fnName,
+                        "Userid": userId
                     };
 
                     // sign this token, and send the signed token back

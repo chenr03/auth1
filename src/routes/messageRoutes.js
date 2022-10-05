@@ -24,7 +24,7 @@ router.get("/hello", messageController.hello)
 
 
 // GET /private hello
-router.get("/privateHello", checkJWT, messageController.privateHello);
+router.get("/privateHello", auths.checkJWT, messageController.privateHello);
     // if logged in, do stuff
     // if not fail
 
