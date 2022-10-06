@@ -11,6 +11,7 @@ let authRoutes = require("./routes/authRoutes")
 // app.use(messageRoutes);
 
 app.use(authRoutes);
+app.use(messageRoutes);
 
 let port = process.env.PORT || 8080
 
